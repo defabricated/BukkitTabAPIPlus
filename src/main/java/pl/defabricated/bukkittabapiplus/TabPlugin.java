@@ -52,6 +52,10 @@ public class TabPlugin extends JavaPlugin {
         for(Player player : Bukkit.getOnlinePlayers()){
             unregisterPlayer(player);
         }
+        for(Player online : Bukkit.getOnlinePlayers()){
+            TabList list = tabLists.get(online.getName());
+            list.clear();
+        }
     }
 
     public HashMap<String, TabList> tabLists = new HashMap();
