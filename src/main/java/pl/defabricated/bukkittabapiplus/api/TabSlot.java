@@ -28,14 +28,9 @@ public class TabSlot {
     TabList list;
     boolean sent, teamExists, toRemove;
 
-    private boolean cPrefix, cSuffix;
-    String oldName;
     String prefix, name, suffix;
     private int ping;
 
-    public void setPrefix(String prefix){ cPrefix = true; this.prefix = prefix; }
-    public void setName(String name){ this.oldName = this.name; this.name = name; }
-    public void setSuffix(String suffix){ cSuffix = true; this.suffix = suffix; }
     public void setPing(int ping){ this.ping = ping; }
 
     public String getPrefix(){ return prefix; }
@@ -69,17 +64,14 @@ public class TabSlot {
         ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
     }
 
-    public void removePrefixAndSuffix(String prefix, String suffix){
+    public void removePrefixAndSuffix(){
         if(toRemove || !teamExists){ //Removing team which doesn't exists causes client crash
             return;
         }
 
         this.teamExists = false;
 
-        this.prefix = prefix;
-        this.suffix = suffix;
-
-        PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 1, name);
+        PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, null, null, 1, name);
         ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
     }
 
