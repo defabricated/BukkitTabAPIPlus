@@ -8,9 +8,9 @@ public class TabSlot {
     TabSlot(TabList list, String prefix, String name, String suffix){
         this.list = list;
 
-        this.prefix = prefix;
-        this.name = name;
-        this.suffix = suffix;
+        this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.name = name.substring(0, Math.min(name.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         this.teamExists = true;
         this.sent = false;
@@ -19,7 +19,7 @@ public class TabSlot {
     TabSlot(TabList list, String name){
         this.list = list;
 
-        this.name = name;
+        this.name = name.substring(0, Math.min(name.length(), 16)); //Limit to 16 chars to avoid client crash
 
         this.teamExists = false;
         this.sent = false;
@@ -29,7 +29,7 @@ public class TabSlot {
     boolean sent, teamExists, toRemove;
 
     String prefix, name, suffix;
-    private int ping;
+    private int ping = 1000;
 
     public void setPing(int ping){ this.ping = ping; }
 
@@ -45,8 +45,8 @@ public class TabSlot {
 
         this.teamExists = true;
 
-        this.prefix = prefix;
-        this.suffix = suffix;
+        this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 0, name);
         ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
@@ -57,8 +57,8 @@ public class TabSlot {
             return;
         }
 
-        this.prefix = prefix;
-        this.suffix = suffix;
+        this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 2, name);
         ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
