@@ -15,6 +15,8 @@ public class TabList {
 
     Player player;
 
+    int defaultPing = 1000;
+
     TabList(TabPlugin plugin, Player player){
         this.plugin = plugin;
         this.player = player;
@@ -25,6 +27,14 @@ public class TabList {
 
     public TabSlot getSlot(int slot){
         return slots.get(slot);
+    }
+
+    public void setDefaultPing(int ping){
+        defaultPing = ping;
+    }
+
+    public int getDefaultPing(){
+        return defaultPing;
     }
 
     public void clearSlot(int slot){

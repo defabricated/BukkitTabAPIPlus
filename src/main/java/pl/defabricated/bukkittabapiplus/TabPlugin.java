@@ -88,7 +88,7 @@ public class TabPlugin extends JavaPlugin {
                                     int ping = (Integer)(c.get(packet));
                                     if (ping == -1) {
                                         a.set(packet, ((String) a.get(packet)).length() > 16 ? ((String) a.get(packet)).substring(0, 16) : ((String) a.get(packet)));
-                                        ping = 1000;
+                                        ping = list.getDefaultPing();
                                         for(int i=0; i<60; i++){
                                             TabSlot slot = list.getSlot(i);
                                             if(slot != null && slot.getName().equals((String)(a.get(packet)))){
