@@ -29,7 +29,7 @@ public class TabSlot {
     boolean sent, teamExists, toRemove;
 
     String prefix, name, suffix;
-    private int ping = 1000;
+    private int ping = list.defaultPing;
 
     public void setPing(int ping){ this.ping = ping; }
 
