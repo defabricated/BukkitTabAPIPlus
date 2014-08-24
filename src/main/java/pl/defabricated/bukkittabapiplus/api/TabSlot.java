@@ -10,10 +10,11 @@ public class TabSlot {
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
         this.name = name.substring(0, Math.min(name.length(), 16)); //Limit to 16 chars to avoid client crash
-        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(suffix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         this.teamExists = true;
         this.sent = false;
+        this.ping = list.defaultPing;
     }
 
     TabSlot(TabList list, String name){
@@ -23,13 +24,14 @@ public class TabSlot {
 
         this.teamExists = false;
         this.sent = false;
+        this.ping = list.defaultPing;
     }
 
     TabList list;
     boolean sent, teamExists, toRemove;
 
     String prefix, name, suffix;
-    private int ping = list.defaultPing;
+    private int ping;
 
     public void setPing(int ping){ this.ping = ping; }
 
