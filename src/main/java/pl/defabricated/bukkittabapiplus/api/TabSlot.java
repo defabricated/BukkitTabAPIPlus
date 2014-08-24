@@ -64,6 +64,7 @@ public class TabSlot {
         }
         if(!teamExists){
             createPrefixAndSuffix(prefix, suffix);
+            return;
         }
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
