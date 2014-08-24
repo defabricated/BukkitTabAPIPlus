@@ -41,7 +41,11 @@ public class TabSlot {
     public int getPing(){ return ping; }
 
     public void createPrefixAndSuffix(String prefix, String suffix){
-        if(toRemove || teamExists){ //2 teams with the same name causes client crash
+        if(toRemove){ //2 teams with the same name causes client crash
+            return;
+        }
+        if(teamExists){
+            updatePrefixAndSuffix(prefix, suffix);
             return;
         }
 
@@ -55,8 +59,11 @@ public class TabSlot {
     }
 
     public void updatePrefixAndSuffix(String prefix, String suffix){
-        if(toRemove || !teamExists){ //Updating prefix and suffix of team which doesn't exists causes client crash
+        if(toRemove){ //Updating prefix and suffix of team which doesn't exists causes client crash
             return;
+        }
+        if(!teamExists){
+            createPrefixAndSuffix(prefix, suffix);
         }
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
