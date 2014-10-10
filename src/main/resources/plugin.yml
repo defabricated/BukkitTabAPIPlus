@@ -2,3 +2,4 @@ name: TabAPIPlus
 author: defabricated
 version: 1.0.2
 main: pl.defabricated.bukkittabapiplus.TabPlugin
+depend: [ProtocolLib]
