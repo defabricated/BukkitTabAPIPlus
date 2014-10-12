@@ -31,21 +31,6 @@ public class PlayerListener implements Listener{
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
-            packet.getStrings().write(0, online.getPlayerListName());
-            packet.getBooleans().write(0, false);
-            packet.getIntegers().write(0, -1);
-            try {
-                plugin.protocolManager.sendServerPacket(event.getPlayer(), packet);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
         plugin.removePlayer(event.getPlayer());
     }
