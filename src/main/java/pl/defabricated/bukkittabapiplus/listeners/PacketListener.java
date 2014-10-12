@@ -30,6 +30,7 @@ public class PacketListener extends PacketAdapter {
                 TabList list = plugin.tabLists.get(player.getName());
                 ping = list.getDefaultPing();
                 String name = packet.getStrings().read(0);
+
                 for(int i=0; i<60; i++){
                     TabSlot slot = list.getSlot(i);
                     if(slot != null && slot.getName().equals(name)){
@@ -37,6 +38,18 @@ public class PacketListener extends PacketAdapter {
                         break;
                     }
                 }
+
+                for(int i=0; i<60; i++){
+                    TabSlot slot = list.getSlot(i);
+                    for(int j=0; j<60; j++) {
+                        TabSlot tabSlot = list.getSlot(j);
+                        if(slot.getName().equals(tabSlot.getName())) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+
                 packet.getIntegers().write(0, ping);
                 event.setPacket(packet);
                 return;
