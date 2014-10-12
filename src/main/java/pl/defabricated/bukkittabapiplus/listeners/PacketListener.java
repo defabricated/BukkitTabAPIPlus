@@ -43,7 +43,7 @@ public class PacketListener extends PacketAdapter {
                     TabSlot slot = list.getSlot(i);
                     for(int j=0; j<60; j++) {
                         TabSlot tabSlot = list.getSlot(j);
-                        if(slot.getName().equals(tabSlot.getName())) {
+                        if(slot != null && tabSlot != null && i != j && slot.getName().equals(tabSlot.getName())) {
                             event.setCancelled(true);
                             return;
                         }
