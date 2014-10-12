@@ -1,11 +1,14 @@
 package pl.defabricated.bukkittabapiplus.api;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import pl.defabricated.bukkittabapiplus.TabPlugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,19 +66,37 @@ public class TabList {
             TabSlot slot = slots.get(i);
             if(slot != null){
                 slot.sent = true;
-                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(slot.getName(), true, -1);
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+                PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+                packet.getStrings().write(0, slot.name);
+                packet.getBooleans().write(0, true);
+                packet.getIntegers().write(0, -1);
+                try {
+                    plugin.protocolManager.sendServerPacket(player, packet);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
                 if(slot.teamExists){
-                    PacketPlayOutScoreboardTeam team = plugin.buildTeamPacket(slot.getName(), slot.getName(), slot.getPrefix(), slot.getSuffix(), 0, slot.getName());
-                    ((CraftPlayer)player).getHandle().playerConnection.sendPacket(team);
+                    PacketContainer team = plugin.buildTeamPacket(slot.getName(), slot.getName(), slot.getPrefix(), slot.getSuffix(), 0, slot.getName());
+                    try {
+                        plugin.protocolManager.sendServerPacket(player, team);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 String nullName = "§" + String.valueOf(i);
                 if (i >= 10) {
                     nullName = "§" + String.valueOf(i / 10) + "§" + String.valueOf(i % 10);
                 }
-                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(nullName, true, -1);
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+                PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+                packet.getStrings().write(0, nullName);
+                packet.getBooleans().write(0, true);
+                packet.getIntegers().write(0, -1);
+                try {
+                    plugin.protocolManager.sendServerPacket(player, packet);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -95,18 +116,36 @@ public class TabList {
             if(slot != null){
                 slot.sent = false;
                 if(slot.teamExists){
-                    PacketPlayOutScoreboardTeam team = plugin.buildTeamPacket(slot.getName(), slot.getName(), null, null, 1, slot.getName());
-                    ((CraftPlayer)player).getHandle().playerConnection.sendPacket(team);
+                    PacketContainer team = plugin.buildTeamPacket(slot.getName(), slot.getName(), null, null, 1, slot.getName());
+                    try {
+                        plugin.protocolManager.sendServerPacket(player, team);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 }
-                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(slot.getName(), false, -1);
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+                PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+                packet.getStrings().write(0, slot.name);
+                packet.getBooleans().write(0, false);
+                packet.getIntegers().write(0, -1);
+                try {
+                    plugin.protocolManager.sendServerPacket(player, packet);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             } else {
                 String nullName = "§" + String.valueOf(slot);
                 if (i >= 10) {
                     nullName = "§" + String.valueOf(i / 10) + "§" + String.valueOf(i % 10);
                 }
-                PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(nullName, false, -1);
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+                PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+                packet.getStrings().write(0, nullName);
+                packet.getBooleans().write(0, false);
+                packet.getIntegers().write(0, -1);
+                try {
+                    plugin.protocolManager.sendServerPacket(player, packet);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
         }
         toRemove.clear();

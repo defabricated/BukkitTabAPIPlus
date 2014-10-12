@@ -1,7 +1,10 @@
 package pl.defabricated.bukkittabapiplus.api;
 
+import com.comphenix.protocol.events.PacketContainer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class TabSlot {
 
@@ -54,8 +57,12 @@ public class TabSlot {
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
         this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
 
-        PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 0, name);
-        ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
+        PacketContainer packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 0, name);
+        try {
+            list.plugin.protocolManager.sendServerPacket(list.player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updatePrefixAndSuffix(String prefix, String suffix){
@@ -70,8 +77,12 @@ public class TabSlot {
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
         this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
 
-        PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 2, name);
-        ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
+        PacketContainer packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 2, name);
+        try {
+            list.plugin.protocolManager.sendServerPacket(list.player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removePrefixAndSuffix(){
@@ -81,8 +92,12 @@ public class TabSlot {
 
         this.teamExists = false;
 
-        PacketPlayOutScoreboardTeam packet = list.plugin.buildTeamPacket(name, name, null, null, 1, name);
-        ((CraftPlayer)list.player).getHandle().playerConnection.sendPacket(packet);
+        PacketContainer packet = list.plugin.buildTeamPacket(name, name, null, null, 1, name);
+        try {
+            list.plugin.protocolManager.sendServerPacket(list.player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 }

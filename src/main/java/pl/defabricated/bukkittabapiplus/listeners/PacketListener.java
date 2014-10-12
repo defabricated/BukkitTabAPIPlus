@@ -37,7 +37,7 @@ public class PacketListener extends PacketAdapter {
                         break;
                     }
                 }
-                packet.getIntegers().write(0, ping)
+                packet.getIntegers().write(0, ping);
                 event.setPacket(packet);
                 return;
             } else {
