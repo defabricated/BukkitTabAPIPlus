@@ -2,14 +2,10 @@ package pl.defabricated.bukkittabapiplus.api;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import pl.defabricated.bukkittabapiplus.TabPlugin;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TabList {
@@ -46,7 +42,6 @@ public class TabList {
             return;
         }
         tabSlot.toRemove = true;
-        toRemove.put(slot, tabSlot);
     }
 
     public TabSlot setSlot(int slot, String name){
@@ -65,6 +60,7 @@ public class TabList {
         for(int i=0; i<60; i++){
             TabSlot slot = slots.get(i);
             if(slot != null){
+                toRemove.put(i, slot);
                 slot.sent = true;
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
                 packet.getStrings().write(0, slot.name);
@@ -98,7 +94,6 @@ public class TabList {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 
@@ -109,10 +104,7 @@ public class TabList {
 
     public void clear(){
         for(int i=0; i<60; i++){
-            TabSlot slot = toRemove.get(i);
-            if(slot == null){
-                slot = slots.get(i);
-            }
+            TabSlot slot = toRemove.remove(i);
             if(slot != null){
                 slot.sent = false;
                 if(slot.teamExists){
@@ -133,7 +125,7 @@ public class TabList {
                     e.printStackTrace();
                 }
             } else {
-                String nullName = "§" + String.valueOf(slot);
+                String nullName = "§" + String.valueOf(i);
                 if (i >= 10) {
                     nullName = "§" + String.valueOf(i / 10) + "§" + String.valueOf(i % 10);
                 }
@@ -148,7 +140,6 @@ public class TabList {
                 }
             }
         }
-        toRemove.clear();
     }
 
 }

@@ -38,7 +38,9 @@ public class TabPlugin extends JavaPlugin {
     public void onDisable(){
         for(Player online : Bukkit.getOnlinePlayers()){
             TabList list = tabLists.get(online.getName());
-            list.clear();
+            if(list != null) {
+                list.clear();
+            }
         }
     }
 
