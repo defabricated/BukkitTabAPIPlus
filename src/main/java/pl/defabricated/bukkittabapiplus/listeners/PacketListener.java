@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.ConnectionSide;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.defabricated.bukkittabapiplus.TabPlugin;
 import pl.defabricated.bukkittabapiplus.api.TabList;
@@ -26,6 +27,11 @@ public class PacketListener extends PacketAdapter {
             PacketContainer packet = event.getPacket();
             Player player = event.getPlayer();
             int ping = packet.getIntegers().read(0);
+            if(ping != -1) {
+                try {
+                    ping = packet.getIntegers().read(2);
+                } catch (Exception ex) { }
+            }
             if (ping == -1) {
                 TabList list = plugin.tabLists.get(player.getName());
                 ping = list.getDefaultPing();
@@ -51,6 +57,9 @@ public class PacketListener extends PacketAdapter {
                 }
 
                 packet.getIntegers().write(0, ping);
+                try {
+                    packet.getIntegers().write(2, ping);
+                } catch (Exception ex) { }
                 event.setPacket(packet);
                 return;
             } else {

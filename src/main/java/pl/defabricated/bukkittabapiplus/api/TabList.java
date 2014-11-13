@@ -2,6 +2,7 @@ package pl.defabricated.bukkittabapiplus.api;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.FieldAccessException;
 import org.bukkit.entity.Player;
 import pl.defabricated.bukkittabapiplus.TabPlugin;
 
@@ -64,8 +65,15 @@ public class TabList {
                 slot.sent = true;
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
                 packet.getStrings().write(0, slot.name);
-                packet.getBooleans().write(0, true);
+                try {
+                    packet.getBooleans().write(0, true);
+                } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(1, 0);
+                }
                 packet.getIntegers().write(0, -1);
+                try {
+                    packet.getIntegers().write(2, -1);
+                } catch (FieldAccessException ex) { }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
@@ -86,8 +94,15 @@ public class TabList {
                 }
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
                 packet.getStrings().write(0, nullName);
-                packet.getBooleans().write(0, true);
+                try {
+                    packet.getBooleans().write(0, true);
+                } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(1, 0);
+                }
                 packet.getIntegers().write(0, -1);
+                try {
+                    packet.getIntegers().write(2, -1);
+                } catch (FieldAccessException ex) { }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
@@ -117,8 +132,15 @@ public class TabList {
                 }
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
                 packet.getStrings().write(0, slot.name);
-                packet.getBooleans().write(0, false);
+                try {
+                    packet.getBooleans().write(0, false);
+                } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(1, 1);
+                }
                 packet.getIntegers().write(0, -1);
+                try {
+                    packet.getIntegers().write(2, -1);
+                } catch (FieldAccessException ex) { }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
@@ -131,8 +153,15 @@ public class TabList {
                 }
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
                 packet.getStrings().write(0, nullName);
-                packet.getBooleans().write(0, false);
+                try {
+                    packet.getBooleans().write(0, false);
+                } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(1, 1);
+                }
                 packet.getIntegers().write(0, -1);
+                try {
+                    packet.getIntegers().write(2, -1);
+                } catch (FieldAccessException ex) { }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
