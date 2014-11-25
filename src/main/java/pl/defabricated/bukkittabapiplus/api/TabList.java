@@ -25,6 +25,10 @@ public class TabList {
     HashMap<Integer, TabSlot> slots = new HashMap();
     HashMap<Integer, TabSlot> toRemove = new HashMap();
 
+    public TabSlot getSlot(int column, int row) {
+        return getSlot(column * (row - 1));
+    }
+
     public TabSlot getSlot(int slot){
         return slots.get(slot);
     }
@@ -45,10 +49,18 @@ public class TabList {
         tabSlot.toRemove = true;
     }
 
+    public TabSlot setSlot(int column, int row, String name) {
+        return setSlot(column * (row - 1), name);
+    }
+
     public TabSlot setSlot(int slot, String name){
         TabSlot tabSlot = new TabSlot(this, name);
         slots.put(slot, tabSlot);
         return tabSlot;
+    }
+
+    public TabSlot setSlot(int column, int row, String prefix, String name, String suffix) {
+        return setSlot(column * (row - 1), prefix, name, suffix);
     }
 
     public TabSlot setSlot(int slot, String prefix, String name, String suffix){
