@@ -16,16 +16,20 @@ public class PacketListener extends PacketAdapter {
     TabPlugin plugin;
 
     public PacketListener(TabPlugin plugin) {
-        super(plugin, ConnectionSide.SERVER_SIDE, Packets.Server.PLAYER_INFO);
+        super(plugin, ConnectionSide.SERVER_SIDE, Packets.Server.PLAYER_INFO, Packets.Server.LOGIN);
         this.plugin = plugin;
         plugin.protocolManager.addPacketListener(this);
     }
 
     @Override
     public void onPacketSending(PacketEvent event){
-        if (!event.isCancelled() && event.getPacketID() == Packets.Server.PLAYER_INFO) {
-            PacketContainer packet = event.getPacket();
-            Player player = event.getPlayer();
+        if(event.isCancelled()) {
+            return;
+        }
+        PacketContainer packet = event.getPacket();
+        Player player = event.getPlayer();
+
+        if (event.getPacketID() == Packets.Server.PLAYER_INFO) {
             int ping = packet.getIntegers().read(0);
             if(ping != -1) {
                 try {
@@ -65,6 +69,11 @@ public class PacketListener extends PacketAdapter {
             } else {
                 event.setCancelled(true);
             }
+        }
+
+        if(event.getPacketID() == Packets.Server.LOGIN) {
+            packet.getIntegers().write(2, 60); //Force maximum TabList size
+            event.setPacket(packet);
         }
     }
 
