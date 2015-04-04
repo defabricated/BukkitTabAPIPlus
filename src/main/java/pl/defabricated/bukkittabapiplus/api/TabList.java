@@ -3,7 +3,10 @@ package pl.defabricated.bukkittabapiplus.api;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.FieldAccessException;
+import net.minecraft.server.v1_7_R4.ChatSerializer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.spigotmc.ProtocolInjector;
 import pl.defabricated.bukkittabapiplus.TabPlugin;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +27,9 @@ public class TabList {
 
     HashMap<Integer, TabSlot> slots = new HashMap();
     HashMap<Integer, TabSlot> toRemove = new HashMap();
+
+    String header = " ";
+    String footer = " ";
 
     public TabSlot getSlot(int column, int row) {
         return getSlot(column * (row - 1));
@@ -69,7 +75,22 @@ public class TabList {
         return tabSlot;
     }
 
+    public void setHeader(String header) {
+        this.header = header != null || header.length() == 0 ? header : "\"\"";
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer != null || footer.length() == 0 ? footer : "\"\"";
+    }
+
     public void send(){
+        if(plugin.protocolManager.getProtocolVersion(player) >= 47){
+            if(header != null || footer != null) {
+                ProtocolInjector.PacketTabHeader packet = new ProtocolInjector.PacketTabHeader(ChatSerializer.a("{\"text\": \"" + header + "\"}"), ChatSerializer.a("{\"text\": \"" + footer + "\"}"));
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            }
+            return;
+        }
         for(int i=0; i<60; i++){
             TabSlot slot = slots.get(i);
             if(slot != null){
@@ -130,6 +151,9 @@ public class TabList {
     }
 
     public void clear(){
+        if(plugin.protocolManager.getProtocolVersion(player) >= 47){
+            return;
+        }
         for(int i=0; i<60; i++){
             TabSlot slot = toRemove.remove(i);
             if(slot != null){
