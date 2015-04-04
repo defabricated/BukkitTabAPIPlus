@@ -29,6 +29,10 @@ public class PacketListener extends PacketAdapter {
         PacketContainer packet = event.getPacket();
         Player player = event.getPlayer();
 
+        if(plugin.protocolManager.getProtocolVersion(player) >= 47) {
+            return;
+        }
+
         if (event.getPacketID() == Packets.Server.PLAYER_INFO) {
             int ping = packet.getIntegers().read(0);
             if(ping != -1) {
