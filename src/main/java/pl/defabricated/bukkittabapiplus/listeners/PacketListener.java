@@ -53,21 +53,11 @@ public class PacketListener extends PacketAdapter {
                     }
                 }
 
-                for(int i=0; i<60; i++){
-                    TabSlot slot = list.getSlot(i);
-                    for(int j=0; j<60; j++) {
-                        TabSlot tabSlot = list.getSlot(j);
-                        if(slot != null && tabSlot != null && i != j && slot.getName().equals(tabSlot.getName())) {
-                            event.setCancelled(true);
-                            return;
-                        }
-                    }
-                }
-
-                packet.getIntegers().write(0, ping);
                 try {
                     packet.getIntegers().write(2, ping);
-                } catch (Exception ex) { }
+                } catch (Exception ex) {
+                    packet.getIntegers().write(0, ping);
+                }
                 event.setPacket(packet);
                 return;
             } else {

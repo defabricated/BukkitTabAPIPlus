@@ -15,7 +15,6 @@ public class TabSlot {
         this.name = name.substring(0, Math.min(name.length(), 16)); //Limit to 16 chars to avoid client crash
         this.suffix = suffix.substring(0, Math.min(suffix.length(), 16)); //Limit to 16 chars to avoid client crash
 
-        this.teamExists = true;
         this.sent = false;
         this.ping = list.defaultPing;
     }
@@ -25,13 +24,12 @@ public class TabSlot {
 
         this.name = name.substring(0, Math.min(name.length(), 16)); //Limit to 16 chars to avoid client crash
 
-        this.teamExists = false;
         this.sent = false;
         this.ping = list.defaultPing;
     }
 
     TabList list;
-    boolean sent, teamExists, toRemove;
+    boolean sent, toRemove;
 
     String prefix, name, suffix;
     private int ping;
@@ -44,15 +42,16 @@ public class TabSlot {
     public int getPing(){ return ping; }
 
     public void createPrefixAndSuffix(String prefix, String suffix){
+        if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
+            return;
+        }
         if(toRemove){ //2 teams with the same name causes client crash
             return;
         }
-        if(teamExists){
+        if(this.prefix != null || this.suffix != null){
             updatePrefixAndSuffix(prefix, suffix);
             return;
         }
-
-        this.teamExists = true;
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
         this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
@@ -66,10 +65,13 @@ public class TabSlot {
     }
 
     public void updatePrefixAndSuffix(String prefix, String suffix){
+        if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
+            return;
+        }
         if(toRemove){ //Updating prefix and suffix of team which doesn't exists causes client crash
             return;
         }
-        if(!teamExists){
+        if(this.prefix == null && this.suffix == null){
             createPrefixAndSuffix(prefix, suffix);
             return;
         }
@@ -86,11 +88,12 @@ public class TabSlot {
     }
 
     public void removePrefixAndSuffix(){
-        if(toRemove || !teamExists){ //Removing team which doesn't exists causes client crash
+        if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
             return;
         }
-
-        this.teamExists = false;
+        if(toRemove || (this.prefix == null && this.suffix == null)){ //Removing team which doesn't exists causes client crash
+            return;
+        }
 
         PacketContainer packet = list.plugin.buildTeamPacket(name, name, null, null, 1, name);
         try {

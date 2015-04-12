@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.FieldAccessException;
 import net.minecraft.server.v1_7_R4.ChatSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
@@ -85,10 +86,8 @@ public class TabList {
 
     public void send(){
         if(plugin.protocolManager.getProtocolVersion(player) >= 47){
-            if(header != null || footer != null) {
-                ProtocolInjector.PacketTabHeader packet = new ProtocolInjector.PacketTabHeader(ChatSerializer.a("{\"text\": \"" + header + "\"}"), ChatSerializer.a("{\"text\": \"" + footer + "\"}"));
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-            }
+            ProtocolInjector.PacketTabHeader packet = new ProtocolInjector.PacketTabHeader(ChatSerializer.a("{\"text\": \"" + header + "\"}"), ChatSerializer.a("{\"text\": \"" + footer + "\"}"));
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             return;
         }
         for(int i=0; i<60; i++){
@@ -97,22 +96,21 @@ public class TabList {
                 toRemove.put(i, slot);
                 slot.sent = true;
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
-                packet.getStrings().write(0, slot.name);
+                packet.getStrings().write(0, slot.getName());
                 try {
                     packet.getBooleans().write(0, true);
+                    packet.getIntegers().write(0, -1);
                 } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(0, 0);
                     packet.getIntegers().write(1, 0);
-                }
-                packet.getIntegers().write(0, -1);
-                try {
                     packet.getIntegers().write(2, -1);
-                } catch (FieldAccessException ex) { }
+                }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
-                if(slot.teamExists){
+                if(slot.getPrefix() != null || slot.getSuffix() != null){
                     PacketContainer team = plugin.buildTeamPacket(slot.getName(), slot.getName(), slot.getPrefix(), slot.getSuffix(), 0, slot.getName());
                     try {
                         plugin.protocolManager.sendServerPacket(player, team);
@@ -129,13 +127,12 @@ public class TabList {
                 packet.getStrings().write(0, nullName);
                 try {
                     packet.getBooleans().write(0, true);
+                    packet.getIntegers().write(0, -1);
                 } catch (FieldAccessException ex) {
+                    packet.getIntegers().write(0, 0);
                     packet.getIntegers().write(1, 0);
-                }
-                packet.getIntegers().write(0, -1);
-                try {
                     packet.getIntegers().write(2, -1);
-                } catch (FieldAccessException ex) { }
+                }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
@@ -158,7 +155,7 @@ public class TabList {
             TabSlot slot = toRemove.remove(i);
             if(slot != null){
                 slot.sent = false;
-                if(slot.teamExists){
+                if(slot.getPrefix() != null || slot.getSuffix() != null){
                     PacketContainer team = plugin.buildTeamPacket(slot.getName(), slot.getName(), null, null, 1, slot.getName());
                     try {
                         plugin.protocolManager.sendServerPacket(player, team);
@@ -167,16 +164,15 @@ public class TabList {
                     }
                 }
                 PacketContainer packet = plugin.protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
-                packet.getStrings().write(0, slot.name);
+                packet.getStrings().write(0, slot.getName());
                 try {
                     packet.getBooleans().write(0, false);
+                    packet.getIntegers().write(0, -1);
                 } catch (FieldAccessException ex) {
-                    packet.getIntegers().write(1, 1);
-                }
-                packet.getIntegers().write(0, -1);
-                try {
+                    packet.getIntegers().write(0, 4);
+                    packet.getIntegers().write(1, 0);
                     packet.getIntegers().write(2, -1);
-                } catch (FieldAccessException ex) { }
+                }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
@@ -191,13 +187,12 @@ public class TabList {
                 packet.getStrings().write(0, nullName);
                 try {
                     packet.getBooleans().write(0, false);
+                    packet.getIntegers().write(0, -1);
                 } catch (FieldAccessException ex) {
-                    packet.getIntegers().write(1, 1);
-                }
-                packet.getIntegers().write(0, -1);
-                try {
+                    packet.getIntegers().write(0, 4);
+                    packet.getIntegers().write(1, 0);
                     packet.getIntegers().write(2, -1);
-                } catch (FieldAccessException ex) { }
+                }
                 try {
                     plugin.protocolManager.sendServerPacket(player, packet);
                 } catch (InvocationTargetException e) {
