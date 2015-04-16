@@ -45,7 +45,7 @@ public class TabSlot {
         if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
             return;
         }
-        if(toRemove){ //2 teams with the same name causes client crash
+        if(toRemove || !sent){ //2 teams with the same name causes client crash
             return;
         }
         if(this.prefix != null || this.suffix != null){
@@ -68,7 +68,7 @@ public class TabSlot {
         if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
             return;
         }
-        if(toRemove){ //Updating prefix and suffix of team which doesn't exists causes client crash
+        if(toRemove || !sent){ //Updating prefix and suffix of team which doesn't exists causes client crash
             return;
         }
         if(this.prefix == null && this.suffix == null){
@@ -91,7 +91,7 @@ public class TabSlot {
         if(list.plugin.protocolManager.getProtocolVersion(list.player) >= 47){
             return;
         }
-        if(toRemove || (this.prefix == null && this.suffix == null)){ //Removing team which doesn't exists causes client crash
+        if(toRemove || (this.prefix == null && this.suffix == null) || !sent){ //Removing team which doesn't exists causes client crash
             return;
         }
 
