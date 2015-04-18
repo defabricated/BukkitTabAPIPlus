@@ -54,7 +54,7 @@ public class TabSlot {
         }
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
-        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(suffix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         PacketContainer packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 0, name);
         try {
@@ -77,7 +77,7 @@ public class TabSlot {
         }
 
         this.prefix = prefix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
-        this.suffix = suffix.substring(0, Math.min(prefix.length(), 16)); //Limit to 16 chars to avoid client crash
+        this.suffix = suffix.substring(0, Math.min(suffix.length(), 16)); //Limit to 16 chars to avoid client crash
 
         PacketContainer packet = list.plugin.buildTeamPacket(name, name, prefix, suffix, 2, name);
         try {
